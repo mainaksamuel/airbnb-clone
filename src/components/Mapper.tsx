@@ -1,10 +1,11 @@
 "use client";
 
-import { useRef, useState } from "react";
-import Map, { Marker, Popup } from "react-map-gl";
+import { useState } from "react";
+import Map, { Marker } from "react-map-gl";
 import getCenter from "geolib/es/getCenter";
 import { SearchListingsData } from "@/typings";
 import Image from "next/image";
+import mapboxgl from "mapbox-gl";
 
 const TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!;
 
@@ -13,13 +14,6 @@ interface MapperProps {
 }
 
 export default function Mapper({ searchResults }: MapperProps) {
-  const [showPopup, setShowPopup] = useState<boolean>(false);
-  const [selectedLocation, setSelectedLocation] = useState<{
-    title?: string;
-    longitude?: number;
-    latitude?: number;
-  }>({});
-
   const coordinates = searchResults.map((result) => ({
     longitude: result.longitude,
     latitude: result.latitude,
@@ -32,54 +26,38 @@ export default function Mapper({ searchResults }: MapperProps) {
     zoom: 12,
   });
 
-  const handleMarkerClick = ({
-    title,
-    latitude,
-    longitude,
-  }: SearchListingsData) => {
-    setSelectedLocation({
-      title,
-      latitude,
-      longitude,
-    });
-    setShowPopup(true);
-  };
-
   return (
     <Map
       mapLib={import("mapbox-gl")}
       mapboxAccessToken={TOKEN}
       mapStyle={"mapbox://styles/mksamuel/clrcg5imf00a301qvfu7dfupa"}
-      style={{ width: "100%", height: "100%" }}
+      style={{ width: "100%", height: "100%", cursor: "pointer" }}
       initialViewState={viewState}
       onMove={(evt) => setViewState(evt.viewState)}
     >
       {searchResults.map((result) => (
-        <div key={result.id}>
-          <Marker latitude={result.latitude} longitude={result.longitude}>
-            <Image
-              src={"/pin.png"}
-              height={20}
-              width={20}
-              alt={`${result.title} - ${result.location} pin marker`}
-              aria-label="push-pin"
-              className="cursor-pointer animate-bounce"
-              onClick={() => handleMarkerClick(result)}
-            />
-          </Marker>
-        </div>
-      ))}
-
-      {showPopup && (
-        <Popup
-          latitude={selectedLocation.latitude!}
-          longitude={selectedLocation.longitude!}
-          anchor="bottom"
-          onClose={() => setShowPopup(false)}
+        <Marker
+          key={result.id}
+          latitude={result.latitude}
+          longitude={result.longitude}
+          popup={new mapboxgl.Popup({
+            closeButton: false,
+            closeOnClick: true,
+            anchor: "bottom",
+          })
+            .setLngLat([result.longitude, result.latitude])
+            .setHTML(`<strong>${result.title}</strong>`)}
         >
-          {selectedLocation.title}
-        </Popup>
-      )}
+          <Image
+            src={"/pin.png"}
+            height={20}
+            width={20}
+            alt={`${result.title} - ${result.location} pin marker`}
+            aria-label="push-pin"
+            className=" animate-bounce"
+          />
+        </Marker>
+      ))}
     </Map>
   );
 }
