@@ -1,6 +1,5 @@
 import Banner from "@/components/Banner";
 import ExploreNearBy from "@/components/ExploreNearBy";
-import Footer from "@/components/Footer";
 import LargeCard from "@/components/LargeCard";
 import LiveAnywhere from "@/components/LiveAnywhere";
 
@@ -20,8 +19,6 @@ export default function Home() {
           btnText="Get Inspired"
         />
       </main>
-
-      <Footer />
     </div>
   );
 }

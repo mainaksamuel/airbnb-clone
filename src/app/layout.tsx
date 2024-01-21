@@ -1,7 +1,10 @@
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
+import "mapbox-gl/dist/mapbox-gl.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import NextTopLoader from "nextjs-toploader";
 import "./globals.css";
-import Header from "@/components/Header";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,8 +21,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+        <NextTopLoader color="#FE595E" height={8} />
         <Header />
         {children}
+        <Footer />
       </body>
     </html>
   );
