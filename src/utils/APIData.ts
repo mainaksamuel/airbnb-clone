@@ -7,7 +7,7 @@ import { supabase } from "./superbase";
 
 export async function getSearchResults() {
   const { data: search_listings_data, error } = await supabase
-    .from("search_listings_data")
+    .from("airbnb_search_listings_data")
     .select("*");
 
   if (error) throw new Error(`Error fetching "search listings data" data.`);
@@ -17,7 +17,7 @@ export async function getSearchResults() {
 
 export async function getNearByData() {
   const { data: explore_nearby_data, error } = await supabase
-    .from("explore_nearby_data")
+    .from("airbnb_explore_nearby_data")
     .select("*");
 
   if (error) throw new Error(`Error fetching "Explore Nearby" data.`);
@@ -27,7 +27,7 @@ export async function getNearByData() {
 
 export async function getLiveAnywhereData() {
   const { data: live_anywhere_data, error } = await supabase
-    .from("live_anywhere_data")
+    .from("airbnb_live_anywhere_data")
     .select("*");
 
   if (error) throw new Error(`Error fetching "Live Anywhere" data.`);
